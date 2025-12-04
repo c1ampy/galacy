@@ -1,4 +1,4 @@
-//·ÂÕÕbÕ¾ÉÏµÄÊÓÆµ£¬ÏÖÔÚ»¹²»ÄÜ·¢Éä×Óµ¯£¬Ò²Ã»ÓĞµĞ»ú
+//ä»¿ç…§bç«™ä¸Šçš„è§†é¢‘ï¼Œç°åœ¨è¿˜ä¸èƒ½å‘å°„å­å¼¹ï¼Œä¹Ÿæ²¡æœ‰æ•Œæœº
 
 #include <conio.h>
 #include <graphics.h>
@@ -52,7 +52,7 @@ void initGame()
 	initgraph(SCREEN_WIDTH, SCREEN_HEIGH);
 	score = 0;
 
-	srand((unsigned)time(NULL));//Ëæ»úÊıÖÖ×Ó
+	srand((unsigned)time(NULL));//éšæœºæ•°ç§å­
 
 	myPlane.bulletLen = 0;
 	myPlane.bulletSpeed = 3;
@@ -69,8 +69,8 @@ void initGame()
 
 void drawGame()
 {
-	BeginBatchDraw();   //¿ªÊ¼ÅúÁ¿ÌùÍ¼
-	//±³¾°
+	BeginBatchDraw();   //å¼€å§‹æ‰¹é‡è´´å›¾
+	//èƒŒæ™¯
 	putimage(0, 0, &img[0]);
 	putimage(myPlane.planePos.x - PLANE_SIZE / 2, myPlane.planePos.y - PLANE_SIZE / 2, &img[2], SRCAND);
 
@@ -83,19 +83,19 @@ void drawGame()
 		}
 
 		RECT rect = { 0,PLANE_SIZE,SCREEN_WIDTH,SCREEN_HEIGH };
-		setbkmode(TRANSPARENT);           // ÎÄ×Ö±³¾°Í¸Ã÷
-		settextcolor(WHITE);              // ÉèÖÃÎÄ×ÖÑÕÉ«Îª°×É«
+		setbkmode(TRANSPARENT);           // æ–‡å­—èƒŒæ™¯é€æ˜
+		settextcolor(WHITE);              // è®¾ç½®æ–‡å­—é¢œè‰²ä¸ºç™½è‰²
 		char str[64] = { 0 };
-		snprintf(str, sizeof(str), "·ÖÊı: %d", score);
+		snprintf(str, sizeof(str), "åˆ†æ•°: %d", score);
 		drawtext(str, &rect, DT_TOP | DT_CENTER);
 	}
 
-	EndBatchDraw();//½áÊøÅúÁ¿ÌùÍ¼
+	EndBatchDraw();//ç»“æŸæ‰¹é‡è´´å›¾
 }
 
 
 void updateGame()
-{   //¸ü¸ÄÎ»ÖÃ
+{   //æ›´æ”¹ä½ç½®
 	if (GetAsyncKeyState('W') & 0x8000)
 	{
 		myPlane.planePos.y -= 2;
@@ -113,7 +113,7 @@ void updateGame()
 		myPlane.planePos.x += 2;
 	}
 
-	//·¢Éä×Óµ¯£¬ÕâÀïÎÒÃ»×ö³öÀ´£¬ºÃÏñ120ĞĞĞ´´íÁË
+	//å‘å°„å­å¼¹ï¼Œè¿™é‡Œæˆ‘æ²¡åšå‡ºæ¥ï¼Œå¥½åƒ120è¡Œå†™é”™äº†
 
 	if (_kbhit())
 	{
@@ -131,9 +131,9 @@ void updateGame()
 int main() {
 
 
-	loadimage(&img[0], "img/±³¾°.png", SCREEN_WIDTH, SCREEN_HEIGH);
-	loadimage(&img[1], "img/µĞ»ú.png", PLANE_SIZE, PLANE_SIZE);
-	loadimage(&img[2], "img/·É»ú.png", PLANE_SIZE, PLANE_SIZE);
+	loadimage(&img[0], "img/èƒŒæ™¯.png", SCREEN_WIDTH, SCREEN_HEIGH);
+	loadimage(&img[1], "img/æ•Œæœº.png", PLANE_SIZE, PLANE_SIZE);
+	loadimage(&img[2], "img/é£æœº.png", PLANE_SIZE, PLANE_SIZE);
 
 	initGame();
 	while (1)
