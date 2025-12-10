@@ -246,7 +246,7 @@ void all_object_update() {
 			Node *next_bullet_node = bullet_node->next; // 同上
 			Object *bullet = (Object *)bullet_node->data;
 			
-			if (object_collide(enemy, bullet)) {
+			if (object_collision(enemy, bullet)) {
 				list_random_erase(enemy_list, enemy_node);
 				list_random_erase(bullet_list, bullet_node);
 
@@ -257,7 +257,7 @@ void all_object_update() {
 			bullet_node = next_bullet_node;
 		}
 
-		if (object_collide(enemy, player)) {
+		if (object_collision(enemy, player)) {
 			// --hp 或结束游戏等
 		}
 		
