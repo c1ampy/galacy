@@ -229,7 +229,7 @@ void all_object_update() {
 	// 检查本次敌机生成与上次敌机生成的时间间隔是否足够。
 	if (enemy_spawn_gap >= min_enemy_spawn_gap) {
 		enemy_spawn();
-		last_enemy_spawn_time = enemy_spawn_time;
+		last_enemy_spawn_time = enemy_spawn_time; // 更新最后一次敌机生成时间。
 
 		fprintf(stdout, "An enemy has been spawned.\n");
 	}
