@@ -8,6 +8,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <math.h>
 #include "object.h"
 
 #ifndef OBJECT_H
