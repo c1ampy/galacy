@@ -35,11 +35,11 @@ typedef struct Object
 /**
  * @brief 判断游戏对象是否碰撞。
  */
-bool object_collide(const Object *obj1, const Object *obj2)
+bool object_collision(const Object *obj1, const Object *obj2)
 {
 	if (!obj1 || !obj2)
 	{
-		fprintf(stderr, "无效的对象指针。\n");
+		fprintf(stderr, "Invalid object pointer.\n");
 		return false;
 	}
 
@@ -60,7 +60,7 @@ bool object_collide(const Object *obj1, const Object *obj2)
 		height1 = BULLET_HEIGHT;
 		break;
 	default:
-		fprintf(stderr, "对象类型错误。\n");
+		fprintf(stderr, "Object type error.\n");
 		return false;
 	}
 
@@ -79,33 +79,30 @@ bool object_collide(const Object *obj1, const Object *obj2)
 		height2 = BULLET_HEIGHT;
 		break;
 	default:
-		fprintf(stderr, "对象类型错误。\n");
+		fprintf(stderr, "Object type error.\n");
 		return false;
 	}
 
-	int x1, y1, x2, y2, r1, r2;
-	x1 = obj1->x + width1;
-	y1 = obj1->y + height1;
-	x2 = obj2->x + width2;
-	y2 = obj2->y + height2;
-	r1 = (width1 / 2 > height1 / 2) ? width1 / 2 : height1 / 2;
-	r1 = (width2 / 2 > height2 / 2) ? width2 / 2 : height2 / 2;
-	double d = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2)); // 半径判定
-	if (d < r1 + r2)
-	{
-		return true; // 撞上了返回true
-	}
-	else
-	{
-		return false; // 没撞上返回false
-	}
+	const int x1 = obj1->x + width1 / 2;
+	const int y1 = obj1->y + height1 / 2;
+	const int x2 = obj2->x + width2 / 2;
+	const int y2 = obj2->y + height2 / 2;
+	const int r1 = width1 > height1 ? width1 / 2 : height1 / 2;
+	const int r2 = width2 > height2 ? width2 / 2 : height2 / 2;
+	const double d = sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
 
-	/*if (obj1->x < obj2->x + width2 &&
+	return d < r1 + r2;
+
+	/*
+	
+	if (obj1->x < obj2->x + width2 &&
 		obj1->x + width1 > obj2->x &&
 		obj1->y < obj2->y + height2 &&
 		obj1->y + height1 > obj2->y) {
 		return true;
 	}
 
-	return false;*/
+	return false;
+	
+	*/
 }

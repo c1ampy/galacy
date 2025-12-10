@@ -34,7 +34,7 @@ List *enemy_list = NULL, *bullet_list = NULL;
 int player_speed, enemy_speed, bullet_speed; // 单位：像素每帧
 // 上面的各类 speed 参数不设置为常量，因为后续可能推出动态难度系统。
 
-bool object_collide(const Object *obj1, const Object *obj2);
+bool object_collision(const Object *obj1, const Object *obj2);
 void playerMove();
 void initEnemyPlane();
 void initBullet();
@@ -168,7 +168,7 @@ void enemyCheck() // 对于所有敌机，判断其与子弹、玩家是否碰�
             Node *next_bullet_node = bullet_node->next; // 同上
             Object *bullet = (Object *)bullet_node->data;
 
-            if (object_collide(enemy, bullet))
+            if (object_collision(enemy, bullet))
             {
                 list_random_erase(enemy_list, enemy_node);
                 list_random_erase(bullet_list, bullet_node);
@@ -178,7 +178,7 @@ void enemyCheck() // 对于所有敌机，判断其与子弹、玩家是否碰�
             bullet_node = next_bullet_node;
         }
 
-        if (object_collide(enemy, player))
+        if (object_collision(enemy, player))
         {
             // --hp 或结束游戏等
         }
