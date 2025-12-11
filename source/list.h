@@ -8,6 +8,10 @@
 
 #include <stdlib.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #ifndef LIST_H
 #define LIST_H
 
@@ -48,3 +52,7 @@ void list_random_erase(List *list, Node *node);
 void list_free(List *list);
 
 #endif /* LIST_H */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */

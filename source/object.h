@@ -8,6 +8,10 @@
 
 #include <stdbool.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif /* __cplusplus */
+
 #ifndef OBJECT_H
 #define OBJECT_H
 
@@ -38,3 +42,7 @@ typedef struct Object {
 bool object_collision(const Object *obj1, const Object *obj2);
 
 #endif /* OBJECT_H */
+
+#ifdef __cplusplus
+}
+#endif /* __cplusplus */
