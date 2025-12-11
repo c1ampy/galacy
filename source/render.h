@@ -22,6 +22,12 @@ extern "C" {
 #ifndef RENDER_H
 #define RENDER_H
 
+typedef struct Button {
+	wchar_t text[64];
+	RECT rect;
+	int hovered;
+} Button;
+
 typedef struct GameplayVisualState {
 	int width;
 	int height;
