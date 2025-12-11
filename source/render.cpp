@@ -142,10 +142,10 @@ static void menu_render_frame(const Button *buttons, const size_t button_count, 
 
 /**
  * @brief 渲染主菜单的主要接口。
- * @returns 返回被按下的按钮的 id。
+ * @returns 返回被按下的按钮的 id：0 = 开始游戏，1 = 选项，2 = 退出
  */
 int render_draw_main_menu(const int width, const int height, const int high_score, const int fps) {
-	const wchar_t* labels[] = { L"Start Game", L"Options", L"Exit" };
+	const wchar_t* labels[] = { L"开始游戏", L"选项", L"退出" };
 	const size_t button_count = sizeof(labels) / sizeof(labels[0]);
 	const int button_width = 240;
 	const int button_height = 56;
