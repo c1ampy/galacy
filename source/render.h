@@ -1,4 +1,4 @@
-/** 
+/**
  * @file render.h
  * @brief 这份头文件声明了渲染飞机大战游戏画面的有关函数。
  * @author 李牧远
@@ -34,9 +34,27 @@ typedef struct GameplayVisualState {
 	int score; // 在底部显示当前分数。
 	int player_dead; // 如果玩家死了，在屏幕上显示 WASTED 并且显示死亡原因。
 	const wchar_t *death_reason;
-	Object *player;
-	List *enemy_list;
-	List *bullet_list;
+	const Object *player;
+	const List *enemy_list;
+	const List *bullet_list;
+
+	GameplayVisualState(
+		const int width, 
+		const int height, 
+		const int score, 
+		const int player_dead, 
+		const wchar_t *death_reason, 
+		const Object *player, 
+		const List *enemy_list, 
+		const List *bullet_list
+	) : width(width), 
+		height(height), 
+		score(score), 
+		player_dead(player_dead), 
+		death_reason(death_reason), 
+		player(player), 
+		enemy_list(enemy_list), 
+		bullet_list(bullet_list) {}
 } GameplayVisualState;
 
 /**

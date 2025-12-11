@@ -1,4 +1,4 @@
-/** 
+/**
  * @file render.cpp
  * @brief 这份源文件实现了渲染飞机大战游戏画面的有关函数。
  * @author 李牧远
@@ -213,7 +213,7 @@ void render_draw_current_frame(const GameplayVisualState *state) {
 	}
 
 	if (g_render_textures.bullet_ok && state->bullet_list) {
-		for (Node *bullet_node = state->enemy_list->head->next; bullet_node; bullet_node = bullet_node->next) {
+		for (Node *bullet_node = state->bullet_list->head->next; bullet_node; bullet_node = bullet_node->next) {
 			const Object *bullet = (Object *)bullet_node->data;
 			putimage(bullet->x, bullet->y, &g_render_textures.bullet);
 		}
