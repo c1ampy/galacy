@@ -22,25 +22,6 @@ extern "C" {
 #ifndef RENDER_H
 #define RENDER_H
 
-typedef struct Button {
-	wchar_t text[64];
-	RECT rect;
-	int hovered;
-} Button;
-
-typedef struct PlayerVisual {
-	int x, y;
-} PlayerVisual;
-
-typedef struct EnemyVisual {
-	int x, y;
-} EnemyVisual;
-
-typedef struct BulletVisual {
-	int x, y;
-	int from_player_or_enemy; // 子弹来自玩家还是敌人：玩家 = 1，敌人 = 0
-} BulletVisual;
-
 typedef struct GameplayVisualState {
 	int width;
 	int height;

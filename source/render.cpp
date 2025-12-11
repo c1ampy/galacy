@@ -151,7 +151,7 @@ int render_draw_main_menu(const int width, const int height, const int high_scor
 	const int center_x = (width - button_width) / 2;
 	const int center_y = height / 2 - (int)((button_height * button_count + spacing * (button_count - 1)) / 2);
 
-	Button buttons[3];
+	Button buttons[3] = { 0 };
 
 	for (size_t i = 0; i < button_count; ++i) {
 		menu_copy_label(buttons[i].text, sizeof(buttons[i].text) / sizeof(buttons[i].text[0]), labels[i]);
