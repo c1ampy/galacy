@@ -37,24 +37,6 @@ typedef struct GameplayVisualState {
 	const Object *player;
 	const List *enemy_list;
 	const List *bullet_list;
-
-	GameplayVisualState(
-		const int width, 
-		const int height, 
-		const int score, 
-		const int player_dead, 
-		const wchar_t *death_reason, 
-		const Object *player, 
-		const List *enemy_list, 
-		const List *bullet_list
-	) : width(width), 
-		height(height), 
-		score(score), 
-		player_dead(player_dead), 
-		death_reason(death_reason), 
-		player(player), 
-		enemy_list(enemy_list), 
-		bullet_list(bullet_list) {}
 } GameplayVisualState;
 
 /**
