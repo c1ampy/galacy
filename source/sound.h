@@ -14,7 +14,7 @@ extern "C" {
 #define SOUND_H
 
 typedef enum {
-	SHOOT,
+	FIRE,
 	EXPLODE,
 	HIT,
 	POWERUP,

@@ -30,7 +30,7 @@ void sound_init() {
 void sound_play(const SoundType sound) {
 
 	switch(sound) {
-	case SHOOT:
+	case FIRE:
 		Beep(800, 100);
 		break;
 		
