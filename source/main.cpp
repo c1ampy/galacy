@@ -24,6 +24,16 @@ bool player_dead;
 // 上面的各类参数不设置为常量，因为后续可能推出动态难度系统。
 
 /**
+ * @brief 初始化游戏对象。
+ */
+void object_init();
+
+/**
+ * @brief 释放游戏对象的内存。
+ */
+void object_free();
+
+/**
  * @brief 处理玩家移动。
  */
 void player_move();
@@ -135,6 +145,28 @@ int main() {
 	fprintf(stdout, "Exited.\n");
 
 	return 0;
+}
+
+/**
+ * @brief 初始化游戏对象。
+ */
+void object_init() {
+	player = (Object*)malloc(sizeof(Object));
+	player->x = SCREEN_WIDTH / 2 - PLAYER_WIDTH / 2;
+	player->y = SCREEN_HEIGHT - PLAYER_HEIGHT - 100;
+	player->type = PLAYER;
+
+	enemy_list = list_init();
+	bullet_list = list_init();
+}
+
+/**
+ * @brief 释放游戏对象的内存。
+ */
+void object_free() {
+	list_free(enemy_list);
+	list_free(bullet_list);
+	free(player);
 }
 
 /**
