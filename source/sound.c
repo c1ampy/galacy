@@ -25,7 +25,7 @@ void sound_init() {
  * 射击：短高音
  * 爆炸：低长音
  * 击中：中音
- * 游戏结束：悲伤的音阶
+ * 死亡：悲伤的音阶
  */
 void sound_play(const SoundType sound) {
 
@@ -47,7 +47,7 @@ void sound_play(const SoundType sound) {
 		Beep(800, 100);
 		break;
 		
-	case GAMEOVER:
+	case DEATH:
 		Beep(400, 300);
 		Sleep(50);
 		Beep(300, 300);
