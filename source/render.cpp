@@ -2,7 +2,7 @@
  * @file render.cpp
  * @brief 这份源文件实现了渲染飞机大战游戏画面的有关函数。
  * @author 李牧远
- * @date 2025-12-11
+ * @date 2025-12-13
  * @version v1.0
  */
 
@@ -208,6 +208,69 @@ int render_draw_main_menu(const int width, const int height, const int high_scor
 	}
 }
 
+int render_draw_difficulty_menu(const int width, const int height, const int difficulty, const int fps) {
+	const wchar_t *labels[] = { L"简单", L"普通", L"困难" };
+	const size_t button_count = _countof(labels);
+	const int button_width = 220;
+	const int button_height = 56;
+	const int spacing = 12;
+	const int center_x = (width - button_width) / 2;
+	const int center_y = height / 2 - (int)((button_height * button_count + spacing * (button_count - 1)) / 2);
+
+	Button buttons[3] = { 0 };
+	for (size_t i = 0; i < button_count; ++i) {
+		menu_copy_label(buttons[i].text, _countof(buttons[i].text), labels[i]);
+		buttons[i].rect = menu_make_rect(center_x, center_y + (int)i * (button_height + spacing), button_width, button_height);
+		buttons[i].hovered = 0;
+	}
+
+	while (true) {
+		ExMessage msg;
+		while (peekmessage(&msg, EM_MOUSE, TRUE)) {
+			if (msg.message == WM_MOUSEMOVE) {
+				for (size_t i = 0; i < button_count; ++i) {
+					buttons[i].hovered = menu_hit_test(&buttons[i], msg.x, msg.y);
+				}
+			}
+			else if (msg.message == WM_LBUTTONDOWN) {
+				for (size_t i = 0; i < button_count; ++i) {
+					if (menu_hit_test(&buttons[i], msg.x, msg.y)) {
+						return (int)i;
+					}
+				}
+			}
+		}
+
+		BeginBatchDraw();
+		if (g_render_textures.menu_background_ok) {
+			putimage(0, 0, &g_render_textures.menu_background);
+		}
+		else {
+			setfillcolor(RGB(10, 20, 60));
+			solidrectangle(0, 0, width, height);
+		}
+
+		settextstyle(36, 0, L"宋体");
+		settextcolor(RGB(255, 255, 200));
+		const wchar_t* title = L"选择难度";
+		outtextxy(width / 2 - textwidth(title) / 2, height / 4 - 40, title);
+
+		settextstyle(18, 0, L"宋体");
+		wchar_t current_buf[64];
+		_snwprintf_s(current_buf, _countof(current_buf), L"当前：%ls", difficulty_to_text(difficulty));
+		outtextxy(width / 2 - textwidth(current_buf) / 2, height / 4 - 8, current_buf);
+
+		for (size_t i = 0; i < button_count; ++i) {
+			menu_draw_button(&buttons[i]);
+		}
+
+		FlushBatchDraw();
+		Sleep(1000 / fps);
+	}
+
+	return difficulty;
+}
+
 /**
  * @brief 渲染游戏画面的主要接口。
  */
@@ -263,7 +326,65 @@ void render_draw_current_frame(const GameplayVisualState *state) {
 }
 
 /**
- * @brief WASTED 页面。
+ * @brief 渲染暂停界面。
+ * @return 0 = 返回游戏，1 = 重新开始游戏，2 = 返回主菜单，3 = 退出游戏。
+ */
+int render_draw_pause_menu(const int width, const int height, const int fps) {
+	const wchar_t* labels[] = { L"返回游戏", L"重新开始游戏", L"返回主菜单", L"退出游戏" };
+	const size_t button_count = _countof(labels);
+	const int button_width = 320;
+	const int button_height = 56;
+	const int spacing = 12;
+	const int center_x = (width - button_width) / 2;
+	const int center_y = height / 2 - (int)((button_height * button_count + spacing * (button_count - 1)) / 2);
+
+	Button buttons[4] = { 0 };
+	for (size_t i = 0; i < button_count; ++i) {
+		menu_copy_label(buttons[i].text, _countof(buttons[i].text), labels[i]);
+		buttons[i].rect = menu_make_rect(center_x, center_y + (int)i * (button_height + spacing), button_width, button_height);
+		buttons[i].hovered = 0;
+	}
+
+	while (true) {
+		ExMessage msg;
+		while (peekmessage(&msg, EM_MOUSE, TRUE)) {
+			if (msg.message == WM_MOUSEMOVE) {
+				for (size_t i = 0; i < button_count; ++i) {
+					buttons[i].hovered = menu_hit_test(&buttons[i], msg.x, msg.y);
+				}
+			}
+			else if (msg.message == WM_LBUTTONDOWN) {
+				for (size_t i = 0; i < button_count; ++i) {
+					if (menu_hit_test(&buttons[i], msg.x, msg.y)) {
+						return (int)i;
+					}
+				}
+			}
+			else if (msg.message == WM_KEYDOWN && msg.vkcode == VK_ESCAPE) {
+				return 0;
+			}
+		}
+
+		BeginBatchDraw();
+
+		settextstyle(48, 0, L"宋体");
+		settextcolor(RGB(255, 255, 255));
+		const wchar_t* title = L"游戏已暂停";
+		outtextxy(width / 2 - textwidth(title) / 2, height / 4 - 60, title);
+
+		for (size_t i = 0; i < button_count; ++i) {
+			menu_draw_button(&buttons[i]);
+		}
+
+		FlushBatchDraw();
+		Sleep(1000 / fps);
+	}
+
+	return 0;
+}
+
+/**
+ * @brief 渲染 WASTED 页面。
  * @return 0 = 重新开始，1 = 返回主菜单，2 = 退出游戏。
  */
 int render_draw_wasted_page(const GameplayVisualState *state, const int high_scores[3], const int fps) {

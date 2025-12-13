@@ -2,7 +2,7 @@
  * @file render.h
  * @brief 这份头文件声明了渲染飞机大战游戏画面的有关函数。
  * @author 李牧远
- * @date 2025-12-11
+ * @date 2025-12-13
  * @version v1.0
  */
 
@@ -92,12 +92,24 @@ static void menu_render_frame(const Button* buttons, const size_t button_count, 
 int render_draw_main_menu(const int width, const int height, const int high_scores[3], const int difficulty, const int fps);
 
 /**
+ * @brief 渲染难度选择界面。
+ * @return 返回选择的难度，取消则返回当前难度。
+ */
+int render_draw_difficulty_menu(const int width, const int height, const int difficulty, const int fps);
+
+/**
  * @brief 渲染游戏画面的主要接口。
  */
 void render_draw_current_frame(const GameplayVisualState *state);
 
 /**
- * @brief WASTED 页面。
+ * @brief 渲染暂停界面。
+ * @return 0 = 返回游戏，1 = 重新开始游戏，2 = 返回主菜单，3 = 退出游戏。
+ */
+int render_draw_pause_menu(const int width, const int height, const int fps);
+
+/**
+ * @brief 渲染 WASTED 页面。
  * @return 0 = 重新开始，1 = 返回主菜单，2 = 退出游戏。
  */
 int render_draw_wasted_page(const GameplayVisualState *state, const int high_scores[3], const int fps);

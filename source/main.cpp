@@ -100,40 +100,23 @@ int main() {
 
 		if (game_control_data.state == MENU) {
 
-			const int high_score = 0; // 文件读取最高分功能待开发。
-			const int button_id = render_draw_main_menu(SCREEN_WIDTH, SCREEN_HEIGHT, high_score, FPS);
+			const int high_score[3] = { 0, 0, 0 }; // 文件读取最高分功能待开发。
+			const int choice = render_draw_main_menu(SCREEN_WIDTH, SCREEN_HEIGHT, high_score, difficulty, FPS);
 
-			if (button_id == 0) {
+			if (choice == 0) {
 				object_init();
 				game_control_start(&game_control_data, starting_hp[difficulty]);
 			}
-			if (button_id == 1) {
+			else if (choice == 1) {
 				game_control_to_settings(&game_control_data);
 			}
-			if (button_id == 2) {
+			else if (choice == 2) {
 				game_control_data.running = false;
 			}
 		}
 		else if (game_control_data.state == SETTINGS) {
 
-			// 图形界面待开发。
-
-			while (true) {
-				if (GetAsyncKeyState('A') & 0x8000) {
-					difficulty = 0;
-					break;
-				}
-				if (GetAsyncKeyState('S') & 0x8000) {
-					difficulty = 1;
-					break;
-				}
-				if (GetAsyncKeyState('D') & 0x8000) {
-					difficulty = 2;
-					break;
-				}
-
-				Sleep(1000 / FPS);
-			}
+			difficulty = render_draw_difficulty_menu(SCREEN_WIDTH, SCREEN_HEIGHT, difficulty, FPS);
 
 			fprintf(stdout, "Difficulty set to %d.\n", difficulty);
 
@@ -142,15 +125,17 @@ int main() {
 		else if (game_control_data.state == PLAYING) {
 
 			object_update();
-			const GameplayVisualState state{
+			const GameplayVisualState state {
 				SCREEN_WIDTH,
 				SCREEN_HEIGHT,
 				game_control_data.score,
-				false,
 				L"",
 				(const Object *)player,
 				(const List *)enemy_list,
-				(const List *)bullet_list
+				(const List *)bullet_list,
+				difficulty,
+				game_control_data.hp,
+				starting_hp[difficulty]
 			};
 			render_draw_current_frame(&state);
 
@@ -159,26 +144,24 @@ int main() {
 			}
 		}
 		else if (game_control_data.state == PAUSED) {
+			
+			const int choice = render_draw_pause_menu(SCREEN_WIDTH, SCREEN_HEIGHT, FPS);
 
-			// 图形界面待开发。
-
-			while (true) {
-				if (GetAsyncKeyState('R') & 0x8000) {
-					game_control_resume(&game_control_data);
-					break;
-				}
-				if (GetAsyncKeyState('M') & 0x8000) {
-					object_free();
-					game_control_to_menu(&game_control_data);
-					break;
-				}
-				if (GetAsyncKeyState(VK_RETURN) & 0x8000) {
-					object_free();
-					game_control_data.running = false;
-					break;
-				}
-
-				Sleep(1000 / FPS);
+			if (choice == 0) {
+				game_control_resume(&game_control_data);
+			}
+			else if (choice == 1) {
+				object_free();
+				object_init();
+				game_control_start(&game_control_data, starting_hp[difficulty]);
+			}
+			else if (choice == 2) {
+				object_free();
+				game_control_to_menu(&game_control_data);
+			}
+			else if (choice == 3) {
+				object_free();
+				game_control_data.running = false;
 			}
 		}
 		else if (game_control_data.state == GAMEOVER) {
@@ -188,30 +171,27 @@ int main() {
 				SCREEN_WIDTH,
 				SCREEN_HEIGHT,
 				game_control_data.score,
-				true,
 				L"",
 				(const Object *)player,
 				(const List *)enemy_list,
-				(const List *)bullet_list
+				(const List *)bullet_list,
+				difficulty,
+				game_control_data.hp,
+				starting_hp[difficulty]
 			};
-			render_draw_current_frame(&state);
-			
-			while (true) {
-				if (GetAsyncKeyState('R') & 0x8000) {
-					object_init();
-					game_control_start(&game_control_data, starting_hp[difficulty]);
-					break;
-				}
-				if (GetAsyncKeyState('M') & 0x8000) {
-					game_control_to_menu(&game_control_data);
-					break;
-				}
-				if (GetAsyncKeyState(VK_ESCAPE) & 0x8000) {
-					game_control_data.running = false;
-					break;
-				}
 
-				Sleep(1000 / FPS);
+			const int high_score[3] = { 0, 0, 0 };
+			const int choice = render_draw_wasted_page(&state, high_score, FPS);
+			
+			if (choice == 0) {
+				object_init();
+				game_control_start(&game_control_data, starting_hp[difficulty]);
+			}
+			else if (choice == 1) {
+				game_control_to_menu(&game_control_data);
+			}
+			else if (choice == 2) {
+				game_control_data.running = false;
 			}
 		}
 
