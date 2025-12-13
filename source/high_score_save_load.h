@@ -1,3 +1,11 @@
+/** 
+ * @file high_score_save_load.c
+ * @brief 这份源文件实现了最高分保存、读取的函数。
+ * @author 刘博闻
+ * @date 2025-12-10
+ * @version v1.0
+ */
+
 #ifdef __cplusplus
 extern "C" {
 #endif /* __cplusplus */
