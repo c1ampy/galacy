@@ -16,7 +16,7 @@ extern "C" {
 #define CONTROL_H
 
 /**
- * @brief 当前的游戏状态，包含菜单、游戏中、暂停、结束四种。
+ * @brief 当前的游戏状态，包含菜单、游戏中、设置、暂停、结束五种。
  */
 typedef enum {
 	MENU,
