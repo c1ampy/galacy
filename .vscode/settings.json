@@ -1,4 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "disabled",
-    "C_Cpp.default.compilerPath": "D:/mingw64/bin/gcc.exe"
+    "C_Cpp.default.compilerPath": "D:/mingw64/bin/gcc.exe",
+    "files.associations": {
+        "mmsystem.h": "c"
+    }
 }

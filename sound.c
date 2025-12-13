@@ -2,75 +2,89 @@
 #include "sound.h"
 #include <windows.h>
 #include <stdio.h>
+#include <mmsystem.h>
 
+//链接windows多媒体库
+#pragma comment(lib, "winmm.lib")
 
-//作用:初始化音效系统
-//Windows控制台使用Beep函数播放简单音效
-void initSound(void)
+static const char* systemSounds[SOUND_COUNT] = {
+    "SystemExclamation",   // 射击音效
+    "SystemHand",          // 爆炸音效
+    "SystemAsterisk",      // 击中音效
+    "SystemQuestion",      // 道具音效
+    "SystemExit",          // 游戏结束
+    "SystemStart"          // 菜单音效
+};
+
+//初始化音效系统
+static int initSound1 = 0;
+int initSound(void)
 {
-    // Windows的Beep函数不需要初始化
-    printf("[音效] 音效系统已初始化(使用Windows Beep)\n");
+    printf("[音效] 正在初始化音效系统...\n");
+    //waveOutGetNumDevs返回可用的音频数目
+    int deviceCount = waveOutGetNumDevs();
+    //判断是否有音频可用
+    if(deviceCount == 0){
+        printf("[警告] 未检测到音频输出设备\n");
+        printf("       可能是电脑没有声卡，或声卡驱动未安装\n");
+        printf("       游戏将继续运行，但没有声音\n");
+        //标记为未初始化
+        initSound1 = 0;
+        //返回0表示初始化失败
+        return 0;
+    }
+    //初始化成功
+    // 标记为已初始化
+    initSound1 = 1;
+
+    printf("[音效] 系统音效初始化成功！\n");
+    printf("       • 使用Windows内置音效（无需外部文件）\n");
+    printf("       • 异步播放，游戏不会卡顿\n");
+    printf("       • 检测到 %d 个音频设备\n", deviceCount);
+    //返回1表示初始化成功
+    return 1;
 }
-
-
-//播放指定类型的音效
-//参数sound代表要播放的音效类型
-/*音效设计:
-//  射击:短高音
-//  爆炸:低长音
-//  击中:中音
-    游戏结束:悲伤的音阶*/
 
 void playSound(SoundType sound)
 {
-    switch(sound) {
-        case SOUND_SHOOT:    //射击音效
-            Beep(800,100);  //800Hz,100ms
-            break;
-            
-        case SOUND_EXPLODE:  //爆炸音效
-            Beep(200,300);  //200Hz,300ms
-            break;
-            
-        case SOUND_HIT:      //击中音效
-            Beep(500,150);  //500Hz,150ms
-            break;
-            
-        case SOUND_POWERUP:  //道具音效
-            Beep(600,100);
-            Beep(800,100);
-            break;
-            
-        case SOUND_GAMEOVER: //游戏结束音效
-            Beep(400,300);
-            Sleep(50);
-            Beep(300,300);
-            Sleep(50);
-            Beep(200,400);
-            break;
-            
-        case SOUND_MENU:     //菜单音效
-            Beep(600,50);
-            break;
-            
-        default:
-            break;  //未知音效类型,不播放
+    //检查是否已初始化
+    if(!initSound1){
+        return;
     }
+    //检查音效是否有效
+    if(sound<0 || sound>=SOUND_COUNT){
+        printf("[音效错误] 无效的音效类型:%d\n",sound);
+        printf("          有效的范围:0到%d\n",SOUND_COUNT - 1);
+        return;
+    }
+    
+    PlaySound(systemSounds[sound],
+              NULL,
+        //播放的标志
+              SND_ASYNC | SND_ALIAS | SND_NODEFAULT);
 }
 
-
-//该函数功能是停止所有正在播放的音效
-//但前面使用的Beep函数无法中途停止,这个函数主要是预留接口
 void stopAllSounds(void)
 {
-    //在替换成其他音效库时,发挥作用
-    //Beep函数似乎会卡顿,后续可改
+    //检查是否初始化
+    if(initSound1){
+        PlaySound(
+            NULL,//停止播放
+            NULL,//不用
+            0
+        );
+    }
 }
 
 
 //作用:清理音效资源
 void cleanupSound(void)
 {
+    //停止播放音效
+    stopAllSounds();
+    //初始化
+    initSound1 = 0;
+
     printf("[音效] 音效系统资源已清理\n");
-    //若使用Beep不需要清理
+    
 }
