@@ -20,6 +20,7 @@ extern "C" {
  */
 typedef enum {
 	MENU,
+	SETTINGS,
 	PLAYING,
 	PAUSED,
 	GAMEOVER
@@ -37,7 +38,8 @@ typedef struct {
 
 // 有关游戏状态控制的一系列函数。
 
-void game_init(GameControlData *game_control_data);
+void game_to_menu(GameControlData *game_control_data);
+void game_to_settings(GameControlData *game_control_data);
 void game_start(GameControlData *game_control_data, const int starting_hp);
 void game_pause(GameControlData *game_control_data);
 void game_resume(GameControlData *game_control_data);

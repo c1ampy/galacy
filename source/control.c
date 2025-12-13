@@ -10,9 +10,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-void game_init(GameControlData *game_control_data) {
+void game_to_menu(GameControlData *game_control_data) {
 	game_control_data->state = MENU;
-	game_control_data->running = true;
+}
+
+void game_to_settings(GameControlData *game_control_data) {
+	game_control_data->state = SETTINGS;
 }
 
 void game_start(GameControlData *game_control_data, const int starting_hp) {
