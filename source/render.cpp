@@ -20,7 +20,7 @@ RenderTextures g_render_textures = { 0 };
 /**
  * @brief 创建 EasyX 窗口
  */
-void render_init(const int width, const int height, const wchar_t *title) {
+void window_create(const int width, const int height, const wchar_t *title) {
 	initgraph(width, height);
 	setbkmode(TRANSPARENT);
 
@@ -32,7 +32,7 @@ void render_init(const int width, const int height, const wchar_t *title) {
 /**
  * @brief 关闭 EasyX 窗口
  */
-void render_shutdown() {
+void window_close() {
 	closegraph();
 }
 
@@ -44,13 +44,13 @@ int render_load_menu_texture(const wchar_t *menu_background_path) {
 }
 
 int render_load_gameplay_textures(
-	const wchar_t *menu_background_path,
+	const wchar_t *game_background_path,
 	const wchar_t *player_path,
 	const wchar_t *enemy_path,
 	const wchar_t *bullet_path) {
 	
 	// 游戏内所有贴图的批量加载
-	int ok1 = load_internal_texture(&g_render_textures.game_background, &g_render_textures.game_background_ok, menu_background_path);
+	int ok1 = load_internal_texture(&g_render_textures.game_background, &g_render_textures.game_background_ok, game_background_path);
 	int ok2 = load_internal_texture(&g_render_textures.player, &g_render_textures.player_ok, player_path);
 	int ok3 = load_internal_texture(&g_render_textures.enemy, &g_render_textures.enemy_ok, enemy_path);
 	int ok4 = load_internal_texture(&g_render_textures.bullet, &g_render_textures.bullet_ok, bullet_path);

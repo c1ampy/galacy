@@ -58,13 +58,13 @@ typedef struct RenderTextures {
 extern RenderTextures g_render_textures;
 
 // 分别负责创建窗口，关闭窗口
-void render_init(const int width, const int height, const wchar_t *title);
-void render_shutdown();
+void window_create(const int width, const int height, const wchar_t *title);
+void window_close();
 
 // 加载资源
 int render_load_menu_texture(const wchar_t *menu_background_path);
 int render_load_gameplay_textures(
-	const wchar_t *menu_background_path,
+	const wchar_t *game_background_path,
 	const wchar_t *player_path,
 	const wchar_t *enemy_path,
 	const wchar_t *bullet_path);

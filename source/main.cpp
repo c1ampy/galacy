@@ -83,7 +83,7 @@ void all_object_update();
 
 int main() {
 
-	render_init(SCREEN_WIDTH, SCREEN_HEIGHT, L"飞机大战");
+	window_create(SCREEN_WIDTH, SCREEN_HEIGHT, L"飞机大战");
 
 	render_load_gameplay_textures(
 		L"",
