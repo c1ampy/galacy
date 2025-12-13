@@ -145,9 +145,9 @@ static void menu_render_frame(const Button* buttons, const size_t button_count, 
 
 	settextstyle(20, 0, L"宋体");
 	settextcolor(RGB(200, 200, 200));
-	_snwprintf_s(line_easy, _countof(line_easy), L"简单模式：%d", high_scores[0]);
-	_snwprintf_s(line_normal, _countof(line_normal), L"普通模式：%d", high_scores[1]);
-	_snwprintf_s(line_hard, _countof(line_hard), L"困难模式：%d", high_scores[2]);
+	_snwprintf_s(line_easy, _countof(line_easy), L"简单模式最高分：%d", high_scores[0]);
+	_snwprintf_s(line_normal, _countof(line_normal), L"普通模式最高分：%d", high_scores[1]);
+	_snwprintf_s(line_hard, _countof(line_hard), L"困难模式最高分：%d", high_scores[2]);
 
 	const int base_y = height / 4 + 16;
 	const int spacing = 28;
