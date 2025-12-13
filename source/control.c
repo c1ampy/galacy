@@ -12,10 +12,12 @@
 
 void game_control_to_menu(GameControlData *game_control_data) {
 	game_control_data->state = MENU;
+	fprintf(stdout, "Switching to main menu.\n");
 }
 
 void game_control_to_settings(GameControlData *game_control_data) {
 	game_control_data->state = SETTINGS;
+	fprintf(stdout, "Switching to settings.\n");
 }
 
 void game_control_start(GameControlData *game_control_data, const int starting_hp) {
