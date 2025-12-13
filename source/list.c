@@ -42,6 +42,11 @@ List *list_init() {
 	}
 	                                   
 	list->head = (Node *)malloc(sizeof(Node));
+	if (!list->head) {
+		fprintf(stderr, "malloc() failed.\n");
+		exit(EXIT_FAILURE);
+	}
+	
 	list->head->data = NULL;
 	list->head->next = NULL;
 	list->head->prev = NULL;
