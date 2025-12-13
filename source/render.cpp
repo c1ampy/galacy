@@ -18,6 +18,18 @@
 RenderTextures g_render_textures = { 0 };
 
 /**
+ * @brief 获取数字难度对应的文字。
+ */ 
+static const wchar_t* difficulty_to_text(const int difficulty) {
+	switch (difficulty) {
+	case 0:  return L"简单";
+	case 1:  return L"普通";
+	case 2:  return L"困难";
+	default: return L"未知";
+	}
+}
+
+/**
  * @brief 创建 EasyX 窗口
  */
 void window_create(const int width, const int height, const wchar_t *title) {
@@ -104,8 +116,17 @@ static inline void menu_draw_button(const Button *button) {
 	drawtext(button->text, &textRect, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
-static void menu_render_frame(const Button *buttons, const size_t button_count, const int width, const int height, const int high_score) {
-	wchar_t high_score_text[64];
+static void menu_render_frame(
+	const Button* buttons,
+	const size_t button_count,
+	const int width,
+	const int height,
+	const int high_scores[3],
+	const int difficulty) {
+	
+	wchar_t line_easy[64];
+	wchar_t line_normal[64];
+	wchar_t line_hard[64];
 
 	BeginBatchDraw();
 
@@ -120,12 +141,26 @@ static void menu_render_frame(const Button *buttons, const size_t button_count, 
 
 	settextstyle(36, 0, L"宋体");
 	settextcolor(RGB(255, 255, 200));
-	outtextxy(width / 2 - 110, height / 4 - 40, L"飞机大战");
+	const wchar_t *title = L"飞机大战";
+	outtextxy(width / 2 - textwidth(title) / 2, height / 4 - 40, title);
+
+	settextstyle(18, 0, L"宋体");
+	settextcolor(RGB(200, 200, 160));
+	wchar_t diff_buf[64];
+	_snwprintf_s(diff_buf, _countof(diff_buf), L"当前难度：%ls", difficulty_to_text(difficulty));
+	outtextxy(width / 2 - textwidth(diff_buf) / 2, height / 4 - 8, diff_buf);
 
 	settextstyle(20, 0, L"宋体");
 	settextcolor(RGB(200, 200, 200));
-	_snwprintf_s(high_score_text, sizeof(high_score_text) / sizeof(high_score_text[0]), L"最高分：%d", high_score);
-	outtextxy(width / 2 - textwidth(high_score_text) / 2, height / 4 + 10, high_score);
+	_snwprintf_s(line_easy, _countof(line_easy), L"简单模式：%d", high_scores[0]);
+	_snwprintf_s(line_normal, _countof(line_normal), L"普通模式：%d", high_scores[1]);
+	_snwprintf_s(line_hard, _countof(line_hard), L"困难模式：%d", high_scores[2]);
+
+	const int base_y = height / 4 + 16;
+	const int spacing = 28;
+	outtextxy(width / 2 - textwidth(line_easy) / 2, base_y, line_easy);
+	outtextxy(width / 2 - textwidth(line_normal) / 2, base_y + spacing, line_normal);
+	outtextxy(width / 2 - textwidth(line_hard) / 2, base_y + spacing * 2, line_hard);
 
 	for (size_t i = 0; i < button_count; ++i) {
 		menu_draw_button(&buttons[i]);
@@ -142,9 +177,15 @@ static void menu_render_frame(const Button *buttons, const size_t button_count, 
  * @brief 渲染主菜单的主要接口。
  * @returns 返回被按下的按钮的 id：0 = 开始游戏，1 = 选项，2 = 退出
  */
-int render_draw_main_menu(const int width, const int height, const int high_score, const int fps) {
-	const wchar_t* labels[] = { L"开始游戏", L"选项", L"退出" };
-	const size_t button_count = sizeof(labels) / sizeof(labels[0]);
+int render_draw_main_menu(
+	const int width,
+	const int height,
+	const int high_scores[3],
+	const int difficulty,
+	const int fps) {
+	
+	const wchar_t* labels[] = { L"开始游戏", L"选择难度", L"退出" };
+	const size_t button_count = _countof(labels);
 	const int button_width = 240;
 	const int button_height = 56;
 	const int spacing = 12;
@@ -152,14 +193,13 @@ int render_draw_main_menu(const int width, const int height, const int high_scor
 	const int center_y = height / 2 - (int)((button_height * button_count + spacing * (button_count - 1)) / 2);
 
 	Button buttons[3] = { 0 };
-
 	for (size_t i = 0; i < button_count; ++i) {
-		menu_copy_label(buttons[i].text, sizeof(buttons[i].text) / sizeof(buttons[i].text[0]), labels[i]);
+		menu_copy_label(buttons[i].text, _countof(buttons[i].text), labels[i]);
 		buttons[i].rect = menu_make_rect(center_x, center_y + (int)i * (button_height + spacing), button_width, button_height);
 		buttons[i].hovered = 0;
 	}
 
-	while (1) {
+	while (true) {
 		ExMessage msg;
 		while (peekmessage(&msg, EM_MOUSE, TRUE)) {
 			if (msg.message == WM_MOUSEMOVE) {
@@ -176,11 +216,9 @@ int render_draw_main_menu(const int width, const int height, const int high_scor
 			}
 		}
 
-		menu_render_frame(buttons, button_count, width, height, high_score);
+		menu_render_frame(buttons, button_count, width, height, high_scores, difficulty);
 		Sleep(1000 / fps);
 	}
-
-	return (int)(button_count - 1);
 }
 
 /**
@@ -201,6 +239,10 @@ void render_draw_current_frame(const GameplayVisualState *state) {
 		solidrectangle(0, 0, state->width, state->height);
 	}
 
+	if (g_render_textures.player_ok && state->player) {
+		putimage(state->player->x, state->player->y, &g_render_textures.player);
+	}
+
 	if (g_render_textures.enemy_ok && state->enemy_list) {
 		for (Node *enemy_node = state->enemy_list->head->next; enemy_node; enemy_node = enemy_node->next) {
 			const Object *enemy = (Object *)enemy_node->data;
@@ -215,34 +257,20 @@ void render_draw_current_frame(const GameplayVisualState *state) {
 		}
 	}
 
-	if (g_render_textures.player_ok && state->player) {
-		putimage(state->player->x, state->player->y, &g_render_textures.player);
-	}
-
 	settextstyle(22, 0, L"宋体");
 	settextcolor(RGB(255, 255, 255));
-
 	wchar_t score_text[64];
-	_snwprintf_s(score_text, sizeof(score_text) / sizeof(score_text[0]), L"SCORE %d", state->score);
+	_snwprintf_s(score_text, _countof(score_text), L"SCORE %d", state->score);
 	outtextxy(state->width / 2 - textwidth(score_text) / 2, state->height - 32, score_text);
 
-	if (state->player_dead) {
-		const wchar_t* death_reason = (state->death_reason != NULL) ? state->death_reason : L"";
-		const wchar_t* prompt = L"按任意键返回标题界面...";
+	settextstyle(18, 0, L"宋体");
+	wchar_t diff_text[64];
+	_snwprintf_s(diff_text, _countof(diff_text), L"难度：%ls", difficulty_to_text(state->difficulty));
+	outtextxy(12, 12, diff_text);
 
-		setfillcolor(RGB(60, 60, 60));
-		solidrectangle(0, 0, state->width, state->height);
-
-		settextstyle(72, 0, L"Impact");
-		settextcolor(RGB(220, 220, 220));
-		outtextxy(state->width / 2 - textwidth(L"WASTED") / 2, state->height / 2 - 120, L"WASTED");
-
-		settextstyle(28, 0, L"宋体");
-		outtextxy(state->width / 2 - textwidth(death_reason) / 2, state->height / 2 - 40, death_reason);
-
-		settextstyle(20, 0, L"宋体");
-		outtextxy(state->width / 2 - textwidth(prompt) / 2, state->height / 2 + 60, prompt);
-	}
+	wchar_t hp_text[64];
+	_snwprintf_s(hp_text, _countof(hp_text), L"HP：%d / %d", state->hp, state->starting_hp > 0 ? state->starting_hp : 1);
+	outtextxy(12, 36, hp_text);
 
 	FlushBatchDraw();
 }

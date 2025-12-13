@@ -31,12 +31,14 @@ typedef struct Button {
 typedef struct GameplayVisualState {
 	int width;
 	int height;
-	int score; // 在底部显示当前分数。
-	int player_dead; // 如果玩家死了，在屏幕上显示 WASTED 并且显示死亡原因。
+	int score;
 	const wchar_t *death_reason;
 	const Object *player;
 	const List *enemy_list;
 	const List *bullet_list;
+	int difficulty;
+	int hp;
+	int starting_hp;
 } GameplayVisualState;
 
 /**
@@ -57,6 +59,11 @@ typedef struct RenderTextures {
 
 extern RenderTextures g_render_textures;
 
+/**
+ * @brief 获取数字难度对应的文字。
+ */ 
+static const wchar_t* difficulty_to_text(const int difficulty);
+
 // 分别负责创建窗口，关闭窗口
 void window_create(const int width, const int height, const wchar_t *title);
 void window_close();
@@ -74,15 +81,26 @@ static inline RECT menu_make_rect(const int x, const int y, const int w, const i
 static inline int menu_hit_test(const Button *item, const int x, const int y);
 static inline void menu_copy_label(wchar_t *dst, size_t cap, const wchar_t *src);
 static inline void menu_draw_button(const Button *button);
-static void menu_render_frame(const Button *buttons, const size_t button_count, const int width, const int height, const int high_score);
+static void menu_render_frame(
+	const Button* buttons,
+	const size_t button_count,
+	const int width,
+	const int height,
+	const int high_scores[3],
+	const int difficulty);
 
 // 渲染菜单和游戏画面的接口
 
 /**
- * @brief 渲染主菜单的主要接口。
- * @returns 返回被按下的按钮的 id：0 = 开始游戏，1 = 选项，2 = 退出
+ * @brief 渲染主菜单。
+ * @return 0 = 开始游戏，1 = 选择难度，2 = 退出。
  */
-int render_draw_main_menu(const int width, const int height, const int high_score, const int fps);
+int render_draw_main_menu(
+	const int width,
+	const int height,
+	const int high_scores[3],
+	const int difficulty,
+	const int fps);
 
 /**
  * @brief 渲染游戏画面的主要接口。
